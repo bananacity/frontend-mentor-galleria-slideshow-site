@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="assets/images/favicon-32x32.png"
+      type="image/x-icon"
+    />
+    <title>galleria: Art showcase</title>
+
+    <link rel="stylesheet" href="assets/css/general.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header class="site-header container">
+      <div class="site-header-wrapper">
+        <a href="#" class="site-header-logo">
+          <img
+            src="assets/images/logo.svg"
+            alt="galleria logo"
+            draggable="false"
+          />
+        </a>
+
+        <button class="slideshow-toggle text-preset-6">Start Slideshow</button>
+      </div>
+    </header>
+
+    <main class="main-content container">
+      <section class="gallery-masonry"></section>
+
+      <section hidden>
+        <!-- Individual page stuff -->
+      </section>
+    </main>
+
+    <footer class="slideshow-controls" hidden>
+      <input
+        type="range"
+        min="1"
+        value="1"
+        step="1"
+        max="15"
+        class="slideshow-controls-progress"
+      />
+
+      <div class="slideshow-controls-info">
+        <h3 class="slideshow-controls-title">Starry Night</h3>
+        <p class="slideshow-controls-artist">Vincent Van Gogh</p>
+      </div>
+
+      <div class="slideshow-controls-buttons">
+        <button
+          class="control-btn control-btn-prev"
+          aria-label="Previous artwork"
+        >
+          <img src="assets/images/icons/icon-previous.svg" alt="" />
+        </button>
+
+        <button class="control-btn control-btn-next" aria-label="Next artwork">
+          <img src="assets/images/icons/icon-next.svg" alt="" />
+        </button>
+      </div>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+  </body>
+</html>
