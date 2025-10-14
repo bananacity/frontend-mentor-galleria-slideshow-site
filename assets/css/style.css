@@ -234,6 +234,8 @@ body {
 .artwork-year {
   color: var(--color-grey-100);
   margin-bottom: -7.5rem;
+  position: relative;
+  z-index: -1;
 }
 
 .artwork-description-wrapper {

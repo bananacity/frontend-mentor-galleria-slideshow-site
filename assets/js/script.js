@@ -1,3 +1,5 @@
+import 'https://esm.sh/number-flow';
+
 const galleryMasonry = document.querySelector('.gallery-masonry');
 const artworkDetail = document.querySelector('.artwork-detail');
 const artworkImage = document.querySelector('.artwork-image');
@@ -5,7 +7,7 @@ const ViewImageBtn = document.querySelector('.view-image-btn');
 const artworkTitle = document.querySelector('.artwork-title');
 const artworkArtist = document.querySelector('.artwork-artist');
 const artworkArtistImage = document.querySelector('.artwork-artist-portrait');
-const artworkYear = document.querySelector('.artwork-year');
+const artworkYear = document.querySelector('number-flow');
 const artworkDescription = document.querySelector('.artwork-description');
 const artworkSourceLink = document.querySelector('.artwork-source-link');
 const homeLink = document.querySelector('.site-header-logo');
@@ -35,6 +37,9 @@ let currentLayout = getLayoutFromPageSize();
 let artworks;
 let currentArtwork;
 let currentPage = 'gallery'; // gallery or artwork
+
+// Numberflow setup
+artworkYear.format = { useGrouping: false };
 
 async function fetchArtworks() {
   try {
@@ -387,7 +392,7 @@ function renderArtworkPage(artworkId) {
 
   artworkTitle.textContent = artwork.name;
   artworkArtist.textContent = artwork.artist.name;
-  artworkYear.textContent = artwork.year;
+  artworkYear.update(artwork.year);
   artworkDescription.textContent = artwork.description;
   artworkSourceLink.href = artwork.source;
 
@@ -463,12 +468,8 @@ async function init() {
 
 init();
 
-// use js to order the items into the right column on tablet and mobile
-// make progress bar clickable /draggable to change which image they're looking at and ensure clickable area is taller for that.
 // when each slideshow page loads animate the different parts to animate in differently and fade in/slide in etc. and fade out the current slide in the inverse way.
 
 // avoid big innerhtml blocks of code and use html template then edit the template and clone it in js as needed
 // add dropshadow to header and footer when the page isn't scrolled all the way to their bottom or top.
-// when dragging the input range slider update the title and artist in real time in the footer info and the buttons but don't load the content until they let go to avoid weirdness
 // animate the slideshow controls footer to slide up / down out of the page with js when on the main / artwork page
-// use the border in the header as the autoplay indicator so it is animated going across to indicate when the next slide will be shown
