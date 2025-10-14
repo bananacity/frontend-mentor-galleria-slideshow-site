@@ -21,11 +21,25 @@ body {
 }
 
 .site-header-wrapper {
+  --autoplay-progress: 0%;
+
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-block: var(--spacing-500);
   border-bottom: 1px solid var(--color-grey-150);
+}
+
+.site-header-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: var(--autoplay-progress);
+  background-color: var(--color-black);
+  transition: all 0.5s;
 }
 
 .slideshow-toggle {

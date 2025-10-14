@@ -11,6 +11,9 @@ const artworkSourceLink = document.querySelector('.artwork-source-link');
 const homeLink = document.querySelector('.site-header-logo');
 const slideshowControls = document.querySelector('.slideshow-controls');
 const slideshowControlsToggle = document.querySelector('.slideshow-toggle');
+const slideshowAutoPlayProgress = document.querySelector(
+  '.site-header-wrapper'
+);
 const slideshowControlsProgress = document.querySelector(
   '.slideshow-controls-progress'
 );
@@ -201,8 +204,11 @@ function switchToPage(page) {
 class SlideShowController {
   currentIndex = 0;
   autoPlayEnabled = false;
-  autoPlayInterval = 3_000;
+  autoPlayInterval = 5_000;
   autoPlayIntervalId;
+  autoPlayProgress = 0; // 0 - 100
+  autoPlayProgressInterval = 1_000;
+  autoPlayProgressIntervalId;
 
   updateControls() {
     const isFirstSlide = this.currentIndex === 0;
@@ -270,6 +276,19 @@ class SlideShowController {
 
     if (currentPage !== 'artwork') switchToPage('artwork');
 
+    this.autoPlayProgressIntervalId = setInterval(() => {
+      const progressIncrementAmount =
+        100 / (this.autoPlayInterval / this.autoPlayProgressInterval - 1);
+
+      if (this.autoPlayProgress + progressIncrementAmount > 100) {
+        this.autoPlayProgress = 0;
+      } else {
+        this.autoPlayProgress += progressIncrementAmount;
+      }
+
+      updateSlideshowAutoPlayProgress(this.autoPlayProgress);
+    }, this.autoPlayProgressInterval);
+
     this.autoPlayIntervalId = setInterval(() => {
       this.nextSlide();
     }, this.autoPlayInterval);
@@ -280,6 +299,9 @@ class SlideShowController {
     this.updateControls();
 
     clearInterval(this.autoPlayIntervalId);
+    clearInterval(this.autoPlayProgressIntervalId);
+    this.autoPlayProgress = 0;
+    updateSlideshowAutoPlayProgress(this.autoPlayProgress);
   }
 }
 
@@ -328,6 +350,13 @@ slideshowControlsProgress.addEventListener('input', () =>
 slideshowControlsProgress.addEventListener('change', () =>
   handleSlideShowControlsProgressAction(true)
 );
+
+function updateSlideshowAutoPlayProgress(value) {
+  slideshowAutoPlayProgress.style.setProperty(
+    '--autoplay-progress',
+    `${value}%`
+  );
+}
 
 function updateSlideshowControlsProgressValue(value) {
   const filledPercentage = (((value + 1) / artworks.length) * 100).toFixed(2);
@@ -442,5 +471,4 @@ init();
 // add dropshadow to header and footer when the page isn't scrolled all the way to their bottom or top.
 // when dragging the input range slider update the title and artist in real time in the footer info and the buttons but don't load the content until they let go to avoid weirdness
 // animate the slideshow controls footer to slide up / down out of the page with js when on the main / artwork page
-// use the border in the header as the autoplay indicator so it is animated going across to indicate when the next slide will be shown.
-// make slide input range animated as it changes so i might need to use a seperate indicator and animate the width or something?
+// use the border in the header as the autoplay indicator so it is animated going across to indicate when the next slide will be shown
