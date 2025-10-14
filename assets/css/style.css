@@ -261,6 +261,8 @@ body {
 
 /* Progress input */
 .slideshow-controls-progress {
+  --progress-filled-width: 0%;
+
   appearance: none;
   background: transparent;
 
@@ -281,14 +283,22 @@ body {
 
 .slideshow-controls-progress::-webkit-slider-thumb {
   appearance: none;
-  height: 100%;
-  width: 0;
-  box-shadow: -200vw 0 0 200vw var(--color-black);
 }
 
 .slideshow-controls-progress::-webkit-slider-runnable-track {
   height: 100%;
   background: var(--color-grey-150);
+}
+
+.slideshow-controls-progress::after {
+  content: '';
+  position: absolute;
+  width: var(--progress-filled-width);
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: var(--color-black);
+  transition: all 0.3s ease;
 }
 
 .slideshow-controls-wrapper {

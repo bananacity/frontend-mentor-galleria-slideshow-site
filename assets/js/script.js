@@ -8,7 +8,9 @@ const artworkArtistImage = document.querySelector('.artwork-artist-portrait');
 const artworkYear = document.querySelector('.artwork-year');
 const artworkDescription = document.querySelector('.artwork-description');
 const artworkSourceLink = document.querySelector('.artwork-source-link');
+const homeLink = document.querySelector('.site-header-logo');
 const slideshowControls = document.querySelector('.slideshow-controls');
+const slideshowControlsToggle = document.querySelector('.slideshow-toggle');
 const slideshowControlsProgress = document.querySelector(
   '.slideshow-controls-progress'
 );
@@ -18,6 +20,8 @@ const slideshowControlsTitle = document.querySelector(
 const slideshowControlsArtist = document.querySelector(
   '.slideshow-controls-artist'
 );
+const slideshowControlsPrevBtn = document.querySelector('.control-btn-prev');
+const slideshowControlsNextBtn = document.querySelector('.control-btn-next');
 const lightbox = document.querySelector('.lightbox');
 const lightboxCloseBtn = document.querySelector('.lightbox-close-btn');
 const lightboxArtworkImage = document.querySelector('.lightbox-image');
@@ -154,15 +158,36 @@ function getArtworkById(artworkId) {
   return artworks.find((artwork) => artwork.id === artworkId);
 }
 
+function getArtworkIndexById(artworkId) {
+  const artwork = getArtworkById(artworkId);
+  return artworks.indexOf(artwork);
+}
+
+window.addEventListener('popstate', () => {
+  const path = window.location.pathname.slice(1);
+
+  // only works for moving back once, would need to ensure index.html is served for all urls paths to fix it or not set url or use # instead for urls
+  if (path === '') {
+    switchToPage('gallery');
+  } else {
+    slideShowController.openSlide(getArtworkIndexById(path));
+  }
+});
+
 function updateArtworkPageMeta(artworkId) {
   const artwork = getArtworkById(artworkId);
 
   document.title = `${artwork.name} by ${artwork.artist.name} - galleria`;
-  window.history.pushState({}, '', artwork.id);
+  history.pushState({}, '', artwork.id);
 }
 
 function switchToPage(page) {
+  currentPage = page;
+
   if (page === 'gallery') {
+    document.title = `galleria: Art showcase`;
+    history.pushState({}, '', '/');
+
     galleryMasonry.classList.remove('hidden');
     artworkDetail.classList.add('hidden');
     slideshowControls.classList.add('hidden');
@@ -173,6 +198,105 @@ function switchToPage(page) {
   }
 }
 
+class SlideShowController {
+  currentIndex = 0;
+  autoPlayEnabled = false;
+  autoPlayInterval = 3_000;
+  autoPlayIntervalId;
+
+  updateControls() {
+    const isFirstSlide = this.currentIndex === 0;
+    const isLastSlide = this.currentIndex === artworks.length - 1;
+
+    slideshowControlsNextBtn.disabled = this.autoPlayEnabled
+      ? false
+      : isLastSlide;
+    slideshowControlsPrevBtn.disabled = this.autoPlayEnabled
+      ? false
+      : isFirstSlide;
+
+    updateSlideshowControlsProgressValue(this.currentIndex);
+
+    slideshowControlsToggle.textContent = this.autoPlayEnabled
+      ? 'Stop Slideshow'
+      : 'Start Slideshow';
+  }
+
+  openSlide(artworkIndex) {
+    this.currentIndex = artworkIndex;
+
+    const artwork = getArtworkByIndex(this.currentIndex);
+    renderArtworkPage(artwork.id);
+  }
+
+  nextSlide() {
+    const lastIndex = artworks.length - 1;
+
+    if (this.currentIndex === lastIndex && this.autoPlayEnabled) {
+      this.currentIndex = 0;
+    } else {
+      this.currentIndex = Math.min(this.currentIndex + 1, lastIndex);
+    }
+
+    const artwork = getArtworkByIndex(this.currentIndex);
+    renderArtworkPage(artwork.id);
+  }
+
+  prevSlide() {
+    const firstIndex = 0;
+    const lastIndex = artworks.length - 1;
+
+    if (this.currentIndex === firstIndex && this.autoPlayEnabled) {
+      this.currentIndex = lastIndex;
+    } else {
+      this.currentIndex = Math.max(this.currentIndex - 1, 0);
+    }
+
+    const artwork = getArtworkByIndex(this.currentIndex);
+    renderArtworkPage(artwork.id);
+  }
+
+  toggleAutoPlay() {
+    if (this.autoPlayEnabled) {
+      this.stopAutoPlay();
+    } else {
+      this.startAutoPlay();
+    }
+  }
+
+  startAutoPlay() {
+    this.autoPlayEnabled = true;
+    this.updateControls();
+
+    if (currentPage !== 'artwork') switchToPage('artwork');
+
+    this.autoPlayIntervalId = setInterval(() => {
+      this.nextSlide();
+    }, this.autoPlayInterval);
+  }
+
+  stopAutoPlay() {
+    this.autoPlayEnabled = false;
+    this.updateControls();
+
+    clearInterval(this.autoPlayIntervalId);
+  }
+}
+
+const slideShowController = new SlideShowController();
+
+slideshowControlsToggle.addEventListener('click', () =>
+  slideShowController.toggleAutoPlay()
+);
+
+slideshowControlsPrevBtn.addEventListener('click', () =>
+  slideShowController.prevSlide()
+);
+
+slideshowControlsNextBtn.addEventListener('click', () =>
+  slideShowController.nextSlide()
+);
+
 function updateSlideShowControlsMeta(artworkId) {
   const artwork = getArtworkById(artworkId);
 
@@ -181,15 +305,20 @@ function updateSlideShowControlsMeta(artworkId) {
 }
 
 function handleSlideShowControlsProgressAction(renderPage) {
-  const artworkIndex = slideshowControlsProgress.value;
+  const artworkIndex = Number(slideshowControlsProgress.value);
   const artwork = getArtworkByIndex(artworkIndex);
+
+  if (slideShowController.autoPlayEnabled) {
+    slideShowController.stopAutoPlay();
+    updateSlideshowControlsProgressValue(artworkIndex);
+  }
 
   // maybe restrict it to at a min select value 1 and then update the max to 15 and -1 from the value when grabbing artwork index
   // but each slide needs to be 1 / 15th filled bar though
 
   // This causes a small bug where we're listening for input and change seperately so clicking the bar runs both the input and change action rendering the meta twice. but that's not a big deal atm but could look weird if we animate the controller meta updating.
   if (renderPage) {
-    renderArtworkPage(artwork.id);
+    slideShowController.openSlide(artworkIndex);
   } else {
     updateSlideShowControlsMeta(artwork.id);
   }
@@ -203,10 +332,21 @@ slideshowControlsProgress.addEventListener('change', () =>
   handleSlideShowControlsProgressAction(true)
 );
 
+function updateSlideshowControlsProgressValue(value) {
+  slideshowControlsProgress.value = value;
+
+  const filledPercentage = (((value + 1) / artworks.length) * 100).toFixed(2);
+  slideshowControlsProgress.style.setProperty(
+    '--progress-filled-width',
+    `${filledPercentage}%`
+  );
+}
+
 function renderArtworkPage(artworkId) {
   const artwork = getArtworkById(artworkId);
   currentArtwork = artworkId;
 
+  slideShowController.updateControls();
   updateArtworkPageMeta(artworkId);
 
   artworkImage.src =
@@ -232,6 +372,16 @@ function renderArtworkPage(artworkId) {
   switchToPage('artwork');
 }
 
+function handleHomeLinkAction(event) {
+  event.preventDefault();
+
+  slideShowController.stopAutoPlay();
+
+  if (currentPage !== 'gallery') switchToPage('gallery');
+}
+
+homeLink.addEventListener('click', handleHomeLinkAction);
+
 function toggleLightbox() {
   lightbox.classList.toggle('hidden');
 }
@@ -248,7 +398,7 @@ function handleGalleryAction(event) {
   event.preventDefault();
 
   const selectedArtworkId = galleryItem.getAttribute('data-artwork-id');
-  renderArtworkPage(selectedArtworkId);
+  slideShowController.openSlide(getArtworkIndexById(selectedArtworkId));
 }
 
 galleryMasonry.addEventListener('click', handleGalleryAction);
@@ -290,12 +440,12 @@ async function init() {
 init();
 
 // use js to order the items into the right column on tablet and mobile
-// add auto play to slideshow
 // make progress bar clickable /draggable to change which image they're looking at and ensure clickable area is taller for that.
-// when each slideshow page loads edit title and url to the right name. also animate the different parts to animate in differently and fade in/slide in etc. and fade out the current slide in the inverse way.
-// maybe use a class with methods for the slideshow controller so we can store the current index, go forward, back, to specific index etc.
+// when each slideshow page loads animate the different parts to animate in differently and fade in/slide in etc. and fade out the current slide in the inverse way.
 
 // avoid big innerhtml blocks of code and use html template then edit the template and clone it in js as needed
 // add dropshadow to header and footer when the page isn't scrolled all the way to their bottom or top.
 // when dragging the input range slider update the title and artist in real time in the footer info and the buttons but don't load the content until they let go to avoid weirdness
 // animate the slideshow controls footer to slide up / down out of the page with js when on the main / artwork page
+// use the border in the header as the autoplay indicator so it is animated going across to indicate when the next slide will be shown.
+// make slide input range animated as it changes so i might need to use a seperate indicator and animate the width or something?
