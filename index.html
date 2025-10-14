@@ -16,7 +16,7 @@
   <body>
     <header class="site-header container">
       <div class="site-header-wrapper">
-        <a href="#" class="site-header-logo">
+        <a href="/" class="site-header-logo">
           <img
             src="assets/images/logo.svg"
             alt="galleria logo"
@@ -31,39 +31,136 @@
     <main class="main-content container">
       <section class="gallery-masonry"></section>
 
-      <section hidden>
-        <!-- Individual page stuff -->
+      <section class="artwork-detail hidden">
+        <div class="artwork-primary-info">
+          <div class="artwork-image-container">
+            <img
+              src="assets/images/art/starry-night/hero-large.jpg"
+              alt="Starry Night by Vincent Van Gogh"
+              class="artwork-image"
+              draggable="false"
+            />
+
+            <button class="view-image-btn text-preset-7">
+              <img
+                src="assets/images/icons/icon-view-image.svg"
+                alt=""
+                draggable="false"
+              />
+              View Image
+            </button>
+          </div>
+
+          <div class="artwork-title-block">
+            <div class="artwork-info">
+              <h1 class="artwork-title text-preset-2">
+                Starry<br />
+                Night
+              </h1>
+              <p class="artwork-artist text-preset-4">Vincent Van Gogh</p>
+            </div>
+
+            <img
+              src="assets/images/art/starry-night/artist.jpg"
+              alt="Portrait of Vincent Van Gogh"
+              class="artwork-artist-portrait"
+              width="128"
+              height="128"
+              draggable="false"
+            />
+          </div>
+        </div>
+
+        <div class="artwork-description-content">
+          <p class="artwork-year text-preset-1">1889</p>
+
+          <div class="artwork-description-wrapper">
+            <p class="artwork-description text-preset-3-mobile">
+              Although The Starry Night was painted during the day in Van Gogh's
+              ground-floor studio, it would be inaccurate to state that the
+              picture was painted from memory. The view has been identified as
+              the one from his bedroom window, facing east, a view which Van
+              Gogh painted variations of no fewer than twenty-one times,
+              including The Starry Night. "Through the iron-barred window," he
+              wrote to his brother, Theo, around 23 May 1889, "I can see an
+              enclosed square of wheat ... above which, in the morning, I watch
+              the sun rise in all its glory."
+            </p>
+
+            <a
+              href="#"
+              target="_blank"
+              class="artwork-source-link text-preset-5-mobile"
+            >
+              Go to source
+            </a>
+          </div>
+        </div>
       </section>
     </main>
 
-    <footer class="slideshow-controls" hidden>
+    <footer class="slideshow-controls hidden">
       <input
         type="range"
-        min="1"
-        value="1"
+        min="0"
+        value="0"
         step="1"
-        max="15"
+        max="14"
         class="slideshow-controls-progress"
       />
 
-      <div class="slideshow-controls-info">
-        <h3 class="slideshow-controls-title">Starry Night</h3>
-        <p class="slideshow-controls-artist">Vincent Van Gogh</p>
-      </div>
+      <div class="container slideshow-controls-wrapper">
+        <div class="slideshow-controls-info">
+          <h3 class="slideshow-controls-title text-preset-3">Starry Night</h3>
+          <p class="slideshow-controls-artist text-preset-5">
+            Vincent Van Gogh
+          </p>
+        </div>
 
-      <div class="slideshow-controls-buttons">
-        <button
-          class="control-btn control-btn-prev"
-          aria-label="Previous artwork"
-        >
-          <img src="assets/images/icons/icon-previous.svg" alt="" />
-        </button>
+        <div class="slideshow-controls-buttons">
+          <button
+            class="control-btn control-btn-prev"
+            aria-label="Previous artwork"
+            disabled
+          >
+            <img
+              src="assets/images/icons/icon-previous.svg"
+              alt=""
+              draggable="false"
+            />
+          </button>
 
-        <button class="control-btn control-btn-next" aria-label="Next artwork">
-          <img src="assets/images/icons/icon-next.svg" alt="" />
-        </button>
+          <button
+            class="control-btn control-btn-next"
+            aria-label="Next artwork"
+          >
+            <img
+              src="assets/images/icons/icon-next.svg"
+              alt=""
+              draggable="false"
+            />
+          </button>
+        </div>
       </div>
     </footer>
+
+    <dialog class="lightbox hidden">
+      <div class="lightbox-wrapper">
+        <button
+          class="lightbox-close-btn text-preset-3-mobile"
+          aria-label="Close image view"
+        >
+          Close
+        </button>
+
+        <img
+          src="assets/images/art/starry-night/gallery.jpg"
+          alt="Starry Night by Vincent Van Gogh"
+          class="lightbox-image"
+          draggable="false"
+        />
+      </div>
+    </dialog>
 
     <script src="assets/js/script.js"></script>
   </body>
