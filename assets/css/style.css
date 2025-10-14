@@ -236,6 +236,8 @@ body {
   margin-bottom: -7.5rem;
   position: relative;
   z-index: -1;
+  height: 1.15em;
+  overflow: hidden;
 }
 
 .artwork-description-wrapper {

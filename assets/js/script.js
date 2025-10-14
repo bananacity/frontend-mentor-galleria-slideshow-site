@@ -279,7 +279,11 @@ class SlideShowController {
     this.autoPlayEnabled = true;
     this.updateControls();
 
-    if (currentPage !== 'artwork') switchToPage('artwork');
+    if (currentPage !== 'artwork') {
+      switchToPage('artwork');
+      // const artwork = getArtworkByIndex(this.currentIndex);
+      // renderArtworkPage(artwork.id);
+    }
 
     this.autoPlayProgressIntervalId = setInterval(() => {
       const progressIncrementAmount =
