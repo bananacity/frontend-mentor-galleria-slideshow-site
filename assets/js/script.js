@@ -310,17 +310,14 @@ function handleSlideShowControlsProgressAction(renderPage) {
 
   if (slideShowController.autoPlayEnabled) {
     slideShowController.stopAutoPlay();
-    updateSlideshowControlsProgressValue(artworkIndex);
   }
-
-  // maybe restrict it to at a min select value 1 and then update the max to 15 and -1 from the value when grabbing artwork index
-  // but each slide needs to be 1 / 15th filled bar though
 
   // This causes a small bug where we're listening for input and change seperately so clicking the bar runs both the input and change action rendering the meta twice. but that's not a big deal atm but could look weird if we animate the controller meta updating.
   if (renderPage) {
     slideShowController.openSlide(artworkIndex);
   } else {
     updateSlideShowControlsMeta(artwork.id);
+    updateSlideshowControlsProgressValue(artworkIndex);
   }
 }
 
@@ -333,8 +330,6 @@ slideshowControlsProgress.addEventListener('change', () =>
 );
 
 function updateSlideshowControlsProgressValue(value) {
-  slideshowControlsProgress.value = value;
-
   const filledPercentage = (((value + 1) / artworks.length) * 100).toFixed(2);
   slideshowControlsProgress.style.setProperty(
     '--progress-filled-width',

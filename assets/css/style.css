@@ -283,6 +283,8 @@ body {
 
 .slideshow-controls-progress::-webkit-slider-thumb {
   appearance: none;
+  height: 100%;
+  width: 0;
 }
 
 .slideshow-controls-progress::-webkit-slider-runnable-track {
