@@ -190,6 +190,8 @@ function updateArtworkPageMeta(artworkId) {
 }
 
 function switchToPage(page) {
+  if (currentPage === page) return;
+
   currentPage = page;
 
   if (page === 'gallery') {
@@ -209,10 +211,10 @@ function switchToPage(page) {
 class SlideShowController {
   currentIndex = 0;
   autoPlayEnabled = false;
-  autoPlayInterval = 5_000;
+  autoPlayInterval = 10_000;
   autoPlayIntervalId;
   autoPlayProgress = 0; // 0 - 100
-  autoPlayProgressInterval = 1_000;
+  autoPlayProgressInterval = 2_000;
   autoPlayProgressIntervalId;
 
   updateControls() {
@@ -299,6 +301,9 @@ class SlideShowController {
     }, this.autoPlayProgressInterval);
 
     this.autoPlayIntervalId = setInterval(() => {
+      this.autoPlayProgress = 0;
+      updateSlideshowAutoPlayProgress(this.autoPlayProgress);
+
       this.nextSlide();
     }, this.autoPlayInterval);
   }
@@ -376,33 +381,52 @@ function updateSlideshowControlsProgressValue(value) {
 }
 
 function renderArtworkPage(artworkId) {
-  const artwork = getArtworkById(artworkId);
-  currentArtwork = artworkId;
-
-  slideShowController.updateControls();
-  updateArtworkPageMeta(artworkId);
-
-  artworkImage.src =
-    BASE_IMG_PATH + artwork.id + '/' + artwork.images.hero.large;
-  artworkArtistImage.src =
-    BASE_IMG_PATH + artwork.id + '/' + artwork.artist.image;
-  lightboxArtworkImage.src =
-    BASE_IMG_PATH + artwork.id + '/' + artwork.images.gallery;
-
-  const imageAltText = `${artwork.name} by ${artwork.artist.name}`;
-  artworkImage.alt = imageAltText;
-  lightboxArtworkImage.alt = imageAltText;
-  artworkArtistImage.alt = `Portrait of ${artwork.artist.name}`;
-
-  artworkTitle.textContent = artwork.name;
-  artworkArtist.textContent = artwork.artist.name;
-  artworkYear.update(artwork.year);
-  artworkDescription.textContent = artwork.description;
-  artworkSourceLink.href = artwork.source;
-
-  updateSlideShowControlsMeta(artworkId);
+  animateArtworkPage(true);
 
   switchToPage('artwork');
+
+  setTimeout(() => {
+    const artwork = getArtworkById(artworkId);
+    currentArtwork = artworkId;
+
+    slideShowController.updateControls();
+    updateArtworkPageMeta(artworkId);
+
+    artworkImage.src =
+      BASE_IMG_PATH + artwork.id + '/' + artwork.images.hero.large;
+    artworkArtistImage.src =
+      BASE_IMG_PATH + artwork.id + '/' + artwork.artist.image;
+    lightboxArtworkImage.src =
+      BASE_IMG_PATH + artwork.id + '/' + artwork.images.gallery;
+
+    const imageAltText = `${artwork.name} by ${artwork.artist.name}`;
+    artworkImage.alt = imageAltText;
+    lightboxArtworkImage.alt = imageAltText;
+    artworkArtistImage.alt = `Portrait of ${artwork.artist.name}`;
+
+    artworkTitle.textContent = artwork.name;
+    artworkArtist.textContent = artwork.artist.name;
+    artworkYear.update(artwork.year);
+    artworkDescription.textContent = artwork.description;
+    artworkSourceLink.href = artwork.source;
+
+    updateSlideShowControlsMeta(artworkId);
+
+    setTimeout(() => animateArtworkPage(false), 300);
+  }, 300);
+}
+
+function animateArtworkPage(hide) {
+  const elements = [
+    artworkImage,
+    artworkArtistImage,
+    artworkDescription,
+    lightboxArtworkImage,
+  ];
+
+  for (const element of elements) {
+    element.classList.toggle('hidden', hide);
+  }
 }
 
 function handleHomeLinkAction(event) {

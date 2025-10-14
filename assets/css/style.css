@@ -165,6 +165,12 @@ body {
 }
 
 .artwork-image {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.artwork-image.hidden {
+  opacity: 0;
 }
 
 .view-image-btn {
@@ -226,6 +232,14 @@ body {
 
 .artwork-artist-portrait {
   margin-left: var(--spacing-1200);
+  transition: all 0.3s ease;
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+}
+
+.artwork-artist-portrait.hidden {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
 }
 
 .artwork-description-content {
@@ -256,6 +270,13 @@ body {
 
 .artwork-description {
   color: var(--color-grey-400);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.artwork-description.hidden {
+  opacity: 0;
+  transform: translateY(var(--spacing-200));
 }
 
 .artwork-source-link:visited,
@@ -413,4 +434,10 @@ body:has(.lightbox:not(.hidden)) {
 }
 
 .lightbox-image {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.lightbox-image.hidden {
+  opacity: 0;
 }
