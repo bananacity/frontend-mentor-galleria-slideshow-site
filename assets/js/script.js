@@ -4,6 +4,8 @@ const galleryMasonry = document.querySelector('.gallery-masonry');
 const artworkDetail = document.querySelector('.artwork-detail');
 const artworkImage = document.querySelector('.artwork-image');
 const ViewImageBtn = document.querySelector('.view-image-btn');
+const artworkInfo = document.querySelector('.artwork-info');
+const artworkInfoWrapper = document.querySelector('.artwork-info-wrapper');
 const artworkTitle = document.querySelector('.artwork-title');
 const artworkArtist = document.querySelector('.artwork-artist');
 const artworkArtistImage = document.querySelector('.artwork-artist-portrait');
@@ -419,6 +421,8 @@ function renderArtworkPage(artworkId) {
 function animateArtworkPage(hide) {
   const elements = [
     artworkImage,
+    artworkInfo,
+    artworkInfoWrapper,
     artworkArtistImage,
     artworkDescription,
     lightboxArtworkImage,
@@ -496,8 +500,5 @@ async function init() {
 
 init();
 
-// when each slideshow page loads animate the different parts to animate in differently and fade in/slide in etc. and fade out the current slide in the inverse way.
-
 // avoid big innerhtml blocks of code and use html template then edit the template and clone it in js as needed
 // add dropshadow to header and footer when the page isn't scrolled all the way to their bottom or top.
-// animate the slideshow controls footer to slide up / down out of the page with js when on the main / artwork page

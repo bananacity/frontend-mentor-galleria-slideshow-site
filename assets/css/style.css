@@ -1,4 +1,6 @@
 body {
+  display: grid;
+  grid-template-rows: auto 1fr;
   min-height: 100svh;
 }
 
@@ -16,6 +18,7 @@ body {
 .site-header {
   position: sticky;
   top: 0;
+  width: 100%;
   z-index: 4;
   background-color: var(--color-white);
 }
@@ -187,6 +190,7 @@ body {
   background-color: var(--color-black);
   text-transform: uppercase;
   color: var(--color-white);
+  opacity: 1;
   transition: all 0.3s ease;
 }
 
@@ -204,6 +208,10 @@ body {
   scale: 1.15;
 }
 
+body:has(.lightbox:not(.hidden)) .view-image-btn {
+  opacity: 0;
+}
+
 .artwork-title-block {
   align-self: stretch;
   margin-left: -4.5rem;
@@ -215,12 +223,26 @@ body {
 }
 
 .artwork-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-300);
   background-color: var(--color-white);
   padding-left: var(--spacing-800);
   padding-bottom: var(--spacing-800);
+  transition: all 0.3s ease;
+}
+
+.artwork-info.hidden {
+  transform: translateY(-1rem);
+}
+
+.artwork-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-300);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.artwork-info-wrapper.hidden {
+  opacity: 0;
 }
 
 .artwork-title {
@@ -293,16 +315,22 @@ body {
 
 /* Slideshow controls footer */
 .slideshow-controls {
-  position: sticky;
+  position: fixed;
+  height: var(--spacing-1200);
   bottom: 0;
   left: 0;
   right: 0;
 
   background-color: var(--color-white);
+  transition: all 0.3s ease;
 }
 
 .slideshow-controls.hidden {
-  display: none;
+  transform: translateY(100%);
+}
+
+body:has(.slideshow-controls:not(.hidden)) {
+  padding-bottom: var(--spacing-1200);
 }
 
 /* Progress input */
