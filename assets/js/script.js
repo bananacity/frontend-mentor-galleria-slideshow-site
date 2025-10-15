@@ -32,6 +32,9 @@ const slideshowControlsNextBtn = document.querySelector('.control-btn-next');
 const lightbox = document.querySelector('.lightbox');
 const lightboxCloseBtn = document.querySelector('.lightbox-close-btn');
 const lightboxArtworkImage = document.querySelector('.lightbox-image');
+const slideshowControlsWrapper = document.querySelector(
+  '.slideshow-controls-wrapper'
+);
 
 const BASE_IMG_PATH = 'assets/images/art/';
 
@@ -433,6 +436,20 @@ function animateArtworkPage(hide) {
   }
 }
 
+function handlePageScrollShadows() {
+  const windowScroll = window.scrollY;
+  const windowHeight = window.innerHeight;
+  const scrollableHeight = document.documentElement.scrollHeight;
+
+  slideshowAutoPlayProgress.classList.toggle('shadow', windowScroll > 5);
+  slideshowControlsWrapper.classList.toggle(
+    'shadow',
+    windowScroll + windowHeight >= scrollableHeight
+  );
+}
+
+document.addEventListener('scroll', handlePageScrollShadows);
+
 function handleHomeLinkAction(event) {
   event.preventDefault();
 
@@ -501,4 +518,3 @@ async function init() {
 init();
 
 // avoid big innerhtml blocks of code and use html template then edit the template and clone it in js as needed
-// add dropshadow to header and footer when the page isn't scrolled all the way to their bottom or top.

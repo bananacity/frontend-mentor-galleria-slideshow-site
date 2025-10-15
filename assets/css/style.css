@@ -31,7 +31,28 @@ body {
   align-items: center;
   justify-content: space-between;
   padding-block: var(--spacing-500);
+  background-color: var(--color-white);
   border-bottom: 1px solid var(--color-grey-150);
+}
+
+/* not working transition */
+.site-header-wrapper::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 24px;
+  width: 100%;
+  box-shadow: 0 32px 32px hsla(0, 0%, 0%, 0.04);
+  pointer-events: none;
+  z-index: -1;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.site-header-wrapper.shadow::before {
+  opacity: 1;
 }
 
 .site-header-wrapper::after {
@@ -333,6 +354,27 @@ body:has(.slideshow-controls:not(.hidden)) {
   padding-bottom: var(--spacing-1200);
 }
 
+.slideshow-controls-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 24px;
+  width: 100%;
+  max-width: 85rem;
+  box-shadow: 0 -32px 32px hsla(0, 0%, 0%, 0.04);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+body:has(.slideshow-controls:not(.hidden))
+  .slideshow-controls-wrapper.shadow::before {
+  opacity: 1;
+}
+
 /* Progress input */
 .slideshow-controls-progress {
   --progress-filled-width: 0%;
@@ -382,6 +424,7 @@ body:has(.slideshow-controls:not(.hidden)) {
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-300) var(--spacing-500);
+  background-color: var(--color-white);
 }
 
 .slideshow-controls-info {
