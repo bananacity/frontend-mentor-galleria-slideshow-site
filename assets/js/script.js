@@ -248,30 +248,30 @@ class SlideShowController {
   }
 
   nextSlide() {
+    let artworkIndex;
     const lastIndex = artworks.length - 1;
 
     if (this.currentIndex === lastIndex && this.autoPlayEnabled) {
-      this.currentIndex = 0;
+      artworkIndex = 0;
     } else {
-      this.currentIndex = Math.min(this.currentIndex + 1, lastIndex);
+      artworkIndex = Math.min(this.currentIndex + 1, lastIndex);
     }
 
-    const artwork = getArtworkByIndex(this.currentIndex);
-    renderArtworkPage(artwork.id);
+    this.openSlide(artworkIndex);
   }
 
   prevSlide() {
+    let artworkIndex;
     const firstIndex = 0;
     const lastIndex = artworks.length - 1;
 
     if (this.currentIndex === firstIndex && this.autoPlayEnabled) {
-      this.currentIndex = lastIndex;
+      artworkIndex = lastIndex;
     } else {
-      this.currentIndex = Math.max(this.currentIndex - 1, 0);
+      artworkIndex = Math.max(this.currentIndex - 1, 0);
     }
 
-    const artwork = getArtworkByIndex(this.currentIndex);
-    renderArtworkPage(artwork.id);
+    this.openSlide(artworkIndex);
   }
 
   toggleAutoPlay() {
@@ -286,11 +286,7 @@ class SlideShowController {
     this.autoPlayEnabled = true;
     this.updateControls();
 
-    if (currentPage !== 'artwork') {
-      switchToPage('artwork');
-      // const artwork = getArtworkByIndex(this.currentIndex);
-      // renderArtworkPage(artwork.id);
-    }
+    if (currentPage !== 'artwork') switchToPage('artwork');
 
     this.autoPlayProgressIntervalId = setInterval(() => {
       const progressIncrementAmount =
@@ -487,9 +483,10 @@ function handleLightboxAction(event) {
   const isOverlay =
     clickedElement.classList.contains('lightbox') ||
     clickedElement.classList.contains('lightbox-wrapper');
-  if (!isOverlay) return;
 
-  toggleLightbox();
+  if (isOverlay) {
+    toggleLightbox();
+  }
 }
 
 lightbox.addEventListener('click', handleLightboxAction);
